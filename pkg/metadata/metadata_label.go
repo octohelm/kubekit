@@ -1,4 +1,4 @@
-package kubeutil
+package metadata
 
 import (
 	"k8s.io/apimachinery/pkg/labels"

@@ -1,4 +1,4 @@
-package kubeutil
+package metadata
 
 import (
 	"testing"

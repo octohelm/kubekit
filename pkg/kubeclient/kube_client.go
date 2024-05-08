@@ -2,6 +2,7 @@ package kubeclient
 
 import (
 	"context"
+	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -19,7 +20,13 @@ func (c *KubeClient) Init(ctx context.Context) error {
 		if err != nil {
 			return err
 		}
+
+		if err := clientgoscheme.AddToScheme(cc.Scheme()); err != nil {
+			return err
+		}
+
 		c.c = cc
+
 	}
 	return nil
 }

@@ -8,6 +8,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/cache"
 
 	"github.com/octohelm/kubekit/pkg/kubeclient"
+	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	controllerruntime "sigs.k8s.io/controller-runtime"
 )
 
@@ -33,11 +34,23 @@ func (s *Operator) InjectContext(ctx context.Context) context.Context {
 }
 
 func (s *Operator) Serve(ctx context.Context) error {
-	schema := runtime.NewScheme()
+	scheme := runtime.NewScheme()
+
+	if err := clientgoscheme.AddToScheme(scheme); err != nil {
+		return err
+	}
+
+	for _, r := range s.reconcilers {
+		if a, ok := r.(SchemeAdder); ok {
+			if err := a.AddToScheme(scheme); err != nil {
+				return errors.Wrapf(err, "unable to add to scheme %T ", a)
+			}
+		}
+	}
 
 	ctrlOpt := controllerruntime.Options{
 		Logger:           wrapAsGoLogger(logr.FromContext(ctx)),
-		Scheme:           schema,
+		Scheme:           scheme,
 		LeaderElectionID: s.LeaderElectionID,
 		LeaderElection:   s.LeaderElectionID != "",
 	}
@@ -58,12 +71,6 @@ func (s *Operator) Serve(ctx context.Context) error {
 	}
 
 	for _, r := range s.reconcilers {
-		if a, ok := r.(SchemeAdder); ok {
-			if err := a.AddToScheme(schema); err != nil {
-				return errors.Wrapf(err, "unable to add to schema %T ", a)
-			}
-		}
-
 		if err := r.SetupWithManager(mgr); err != nil {
 			return errors.Wrapf(err, "unable to create controller: %T", r)
 		}
