@@ -2,8 +2,9 @@ package operator
 
 import (
 	"context"
+	"fmt"
+
 	"github.com/go-courier/logr"
-	"github.com/pkg/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/cache"
 
@@ -12,6 +13,7 @@ import (
 	controllerruntime "sigs.k8s.io/controller-runtime"
 )
 
+// +gengo:injectable:provider ReconcilerRegistry
 type Operator struct {
 	// Watch namespace
 	WatchNamespace string `flag:",omitempty"`
@@ -22,15 +24,13 @@ type Operator struct {
 
 	reconcilers []Reconciler `flag:"-"`
 	cancel      func()
+
+	client kubeclient.Client `inject:""`
 }
 
 func (s *Operator) RegisterReconciler(reconcilers ...Reconciler) error {
 	s.reconcilers = append(s.reconcilers, reconcilers...)
 	return nil
-}
-
-func (s *Operator) InjectContext(ctx context.Context) context.Context {
-	return ReconcilerRegistryContext.Inject(ctx, s)
 }
 
 func (s *Operator) Serve(ctx context.Context) error {
@@ -43,7 +43,7 @@ func (s *Operator) Serve(ctx context.Context) error {
 	for _, r := range s.reconcilers {
 		if a, ok := r.(SchemeAdder); ok {
 			if err := a.AddToScheme(scheme); err != nil {
-				return errors.Wrapf(err, "unable to add to scheme %T ", a)
+				return fmt.Errorf("unable to add to scheme %T: %w", a, err)
 			}
 		}
 	}
@@ -63,7 +63,7 @@ func (s *Operator) Serve(ctx context.Context) error {
 		}
 	}
 
-	rawClient := kubeclient.KubeConfigFromClient(kubeclient.Context.From(ctx))
+	rawClient := kubeclient.KubeConfigFromClient(s.client)
 
 	mgr, err := controllerruntime.NewManager(rawClient, ctrlOpt)
 	if err != nil {
@@ -72,7 +72,7 @@ func (s *Operator) Serve(ctx context.Context) error {
 
 	for _, r := range s.reconcilers {
 		if err := r.SetupWithManager(mgr); err != nil {
-			return errors.Wrapf(err, "unable to create controller: %T", r)
+			return fmt.Errorf("unable to create controller: %T: %w", r, err)
 		}
 	}
 

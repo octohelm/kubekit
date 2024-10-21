@@ -1,9 +1,9 @@
 package operator
 
 import (
+	"fmt"
 	"github.com/go-courier/logr"
 	gologr "github.com/go-logr/logr"
-	"github.com/pkg/errors"
 )
 
 func wrapAsGoLogger(l logr.Logger) gologr.Logger {
@@ -33,7 +33,7 @@ func (l *logSink) Info(level int, msg string, keysAndValues ...interface{}) {
 }
 
 func (l *logSink) Error(err error, msg string, keysAndValues ...interface{}) {
-	l.l.WithValues(l.keysAndValues...).WithValues(keysAndValues...).Error(errors.Wrap(err, msg))
+	l.l.WithValues(l.keysAndValues...).WithValues(keysAndValues...).Error(fmt.Errorf("%w: %s", err, msg))
 }
 
 func (l *logSink) WithValues(keysAndValues ...interface{}) gologr.LogSink {

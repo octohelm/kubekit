@@ -1,8 +1,8 @@
 package metadata
 
 import (
+	"errors"
 	"fmt"
-	"github.com/pkg/errors"
 	"k8s.io/apimachinery/pkg/util/validation"
 	"strings"
 )
@@ -20,11 +20,11 @@ func ValidateLabel(label string) error {
 	}
 
 	if errs := validation.IsDNS1123Subdomain(prefix); len(errs) > 0 {
-		return errors.Wrapf(ErrInvalidKey, "prefix: %s: %s", errs[0], prefix)
+		return fmt.Errorf("%w: prefix: %s: %s", ErrInvalidKey, errs[0], prefix)
 	}
 
 	if errs := validation.IsValidLabelValue(name); len(errs) > 0 {
-		return errors.Wrapf(ErrInvalidKey, "name: %s: %s", errs[0], name)
+		return fmt.Errorf("%w: name: %s: %s", ErrInvalidKey, errs[0], name)
 	}
 
 	return nil

@@ -3,18 +3,17 @@ package kubeclient
 import (
 	"context"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
-
-	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+// +gengo:injectable:provider
 type KubeClient struct {
 	// Paths to a kubeconfig. Only required if out-of-cluster.
 	Kubeconfig string `flag:",omitempty"`
 
-	c client.Client
+	c Client `provide:""`
 }
 
-func (c *KubeClient) Init(ctx context.Context) error {
+func (c *KubeClient) beforeInit(ctx context.Context) error {
 	if c.c == nil {
 		cc, err := NewClient(c.Kubeconfig)
 		if err != nil {
@@ -26,11 +25,6 @@ func (c *KubeClient) Init(ctx context.Context) error {
 		}
 
 		c.c = cc
-
 	}
 	return nil
-}
-
-func (c *KubeClient) InjectContext(ctx context.Context) context.Context {
-	return Context.Inject(ctx, c.c)
 }

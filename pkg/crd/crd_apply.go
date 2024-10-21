@@ -2,9 +2,8 @@ package crd
 
 import (
 	"context"
+	"fmt"
 	"github.com/octohelm/kubekit/pkg/kubeclient"
-	"github.com/pkg/errors"
-
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	apiextensionsclientset "k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -13,7 +12,7 @@ import (
 func Apply(ctx context.Context, c client.Client, crds ...*apiextensionsv1.CustomResourceDefinition) error {
 	kubeconfig := kubeclient.KubeConfigFromClient(c)
 	if kubeconfig == nil {
-		return errors.New("missing kubeconfig")
+		return fmt.Errorf("missing kubeconfig of %T", c)
 	}
 	cs, err := apiextensionsclientset.NewForConfig(kubeconfig)
 	if err != nil {

@@ -1,7 +1,6 @@
 package kubeclient
 
 import (
-	contextx "github.com/octohelm/x/context"
 	"os"
 	"path"
 	"strings"
@@ -11,9 +10,10 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-var Context = contextx.New[client.Client]()
+// +gengo:injectable:provider
+type Client = client.Client
 
-func NewClient(kubeConfigPath string) (client.Client, error) {
+func NewClient(kubeConfigPath string) (Client, error) {
 	if kubeConfigPath != "" && strings.HasPrefix(kubeConfigPath, "~/") {
 		kubeConfigPath = path.Join(os.Getenv("HOME"), kubeConfigPath[2:])
 	}
