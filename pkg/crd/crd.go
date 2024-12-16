@@ -2,13 +2,14 @@ package crd
 
 import (
 	"context"
-	"encoding/json"
-	"github.com/octohelm/x/ptr"
 
+	"github.com/go-json-experiment/json"
+	jsonv1 "github.com/go-json-experiment/json/v1"
+	"github.com/octohelm/x/ptr"
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	apiextensionstypesv1 "k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset/typed/apiextensions/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
@@ -25,19 +26,19 @@ type CustomResourceDefinition struct {
 }
 
 func applyCRD(ctx context.Context, apis apiextensionstypesv1.CustomResourceDefinitionInterface, crd *apiextensionsv1.CustomResourceDefinition) error {
-	_, err := apis.Get(ctx, crd.Name, v1.GetOptions{})
+	_, err := apis.Get(ctx, crd.Name, metav1.GetOptions{})
 	if err != nil {
 		if !apierrors.IsNotFound(err) {
 			return err
 		}
-		_, err := apis.Create(ctx, crd, v1.CreateOptions{})
+		_, err := apis.Create(ctx, crd, metav1.CreateOptions{})
 		return err
 	}
-	data, err := json.Marshal(crd)
+	data, err := json.Marshal(crd, jsonv1.OmitEmptyWithLegacyDefinition(true))
 	if err != nil {
 		return err
 	}
-	_, err = apis.Patch(ctx, crd.Name, types.MergePatchType, data, v1.PatchOptions{})
+	_, err = apis.Patch(ctx, crd.Name, types.MergePatchType, data, metav1.PatchOptions{})
 	return err
 }
 

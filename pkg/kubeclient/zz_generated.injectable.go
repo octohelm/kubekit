@@ -20,23 +20,10 @@ func ClientFromContext(ctx context.Context) (Client, bool) {
 func ClientInjectContext(ctx context.Context, tpe Client) context.Context {
 	return context.WithValue(ctx, contextClient{}, tpe)
 }
-
-type contextKubeClient struct{}
-
-func KubeClientFromContext(ctx context.Context) (*KubeClient, bool) {
-	if v, ok := ctx.Value(contextKubeClient{}).(*KubeClient); ok {
-		return v, true
-	}
-	return nil, false
-}
-
-func KubeClientInjectContext(ctx context.Context, tpe *KubeClient) context.Context {
-	return context.WithValue(ctx, contextKubeClient{}, tpe)
-}
 func (p *KubeClient) InjectContext(ctx context.Context) context.Context {
 	ctx = ClientInjectContext(ctx, p.c)
 
-	return KubeClientInjectContext(ctx, p)
+	return ctx
 }
 func (v *KubeClient) Init(ctx context.Context) error {
 	if err := v.beforeInit(ctx); err != nil {
