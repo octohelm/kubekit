@@ -1,21 +1,24 @@
 module github.com/octohelm/kubekit
 
-go 1.23.4
+go 1.24.0
 
 require (
 	github.com/go-courier/logr v0.3.1
-	github.com/go-json-experiment/json v0.0.0-20250108213703-50a1ba2c17a5
+	github.com/octohelm/courier v0.0.0-20250213031428-2432e8681d86
+	github.com/octohelm/gengo v0.0.0-20250213040207-59af51fbf311
+	github.com/octohelm/x v0.0.0-20250212034859-0e2c4f726784
+)
+
+require (
+	github.com/go-json-experiment/json v0.0.0-20250212230008-60a0516c2895
 	github.com/go-logr/logr v1.4.2
-	github.com/octohelm/courier v0.0.0-20250109060539-e7e7b35c1a99
-	github.com/octohelm/gengo v0.0.0-20250104080658-4527b142baef
-	github.com/octohelm/x v0.0.0-20250109055815-dda0e47e75ea
 	github.com/opencontainers/go-digest v1.0.0
 	github.com/pelletier/go-toml/v2 v2.2.3
-	k8s.io/apiextensions-apiserver v0.32.0
-	k8s.io/apimachinery v0.32.0
-	k8s.io/client-go v0.32.0
-	sigs.k8s.io/controller-runtime v0.19.4
-	sigs.k8s.io/controller-tools v0.17.0
+	k8s.io/apiextensions-apiserver v0.32.1
+	k8s.io/apimachinery v0.32.1
+	k8s.io/client-go v0.32.1
+	sigs.k8s.io/controller-runtime v0.20.1
+	sigs.k8s.io/controller-tools v0.17.2
 )
 
 require (
@@ -32,6 +35,7 @@ require (
 	github.com/gobuffalo/flect v1.0.3 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
+	github.com/google/btree v1.1.3 // indirect
 	github.com/google/gnostic-models v0.6.9 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
@@ -49,28 +53,28 @@ require (
 	github.com/prometheus/client_model v0.6.1 // indirect
 	github.com/prometheus/common v0.61.0 // indirect
 	github.com/prometheus/procfs v0.15.1 // indirect
-	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/spf13/pflag v1.0.6 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
-	golang.org/x/exp v0.0.0-20250106191152-7588d65b2ba8 // indirect
-	golang.org/x/mod v0.22.0 // indirect
-	golang.org/x/net v0.34.0 // indirect
+	golang.org/x/mod v0.23.0 // indirect
+	golang.org/x/net v0.35.0 // indirect
 	golang.org/x/oauth2 v0.25.0 // indirect
-	golang.org/x/sync v0.10.0 // indirect
-	golang.org/x/sys v0.29.0 // indirect
-	golang.org/x/term v0.28.0 // indirect
-	golang.org/x/text v0.21.0 // indirect
+	golang.org/x/sync v0.11.0 // indirect
+	golang.org/x/sys v0.30.0 // indirect
+	golang.org/x/term v0.29.0 // indirect
+	golang.org/x/text v0.22.0 // indirect
 	golang.org/x/time v0.9.0 // indirect
-	golang.org/x/tools v0.29.0 // indirect
+	golang.org/x/tools v0.30.0 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.4.0 // indirect
 	google.golang.org/protobuf v1.36.2 // indirect
 	gopkg.in/evanphx/json-patch.v4 v4.12.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/api v0.32.0 // indirect
+	k8s.io/api v0.32.1 // indirect
 	k8s.io/klog/v2 v2.130.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20241212222426-2c72e554b1e7 // indirect
 	k8s.io/utils v0.0.0-20241210054802-24370beab758 // indirect
+	mvdan.cc/gofumpt v0.7.0 // indirect
 	sigs.k8s.io/json v0.0.0-20241014173422-cfa47c3a1cc8 // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.5.0 // indirect
 	sigs.k8s.io/yaml v1.4.0 // indirect
