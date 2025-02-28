@@ -3,13 +3,12 @@ package metadata
 import (
 	"errors"
 	"fmt"
-	"k8s.io/apimachinery/pkg/util/validation"
 	"strings"
+
+	"k8s.io/apimachinery/pkg/util/validation"
 )
 
-var (
-	ErrInvalidKey = errors.New("invalid key [<prefix>/]<name>")
-)
+var ErrInvalidKey = errors.New("invalid key [<prefix>/]<name>")
 
 func ValidateLabel(label string) error {
 	name := label

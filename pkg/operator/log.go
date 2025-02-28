@@ -2,6 +2,7 @@ package operator
 
 import (
 	"fmt"
+
 	"github.com/go-courier/logr"
 	gologr "github.com/go-logr/logr"
 )

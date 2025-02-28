@@ -1,3 +1,4 @@
+//go:generate go tool gen .
 package kubeclient
 
 import (

@@ -1,3 +1,4 @@
+//go:generate go tool gen .
 package crd
 
 import (
@@ -47,10 +48,10 @@ func scanJSONSchema(ctx context.Context, v any) *apiextensionsv1.JSONSchemaProps
 		Type: "object",
 		Properties: map[string]apiextensionsv1.JSONSchemaProps{
 			"spec": {
-				XPreserveUnknownFields: ptr.Bool(true),
+				XPreserveUnknownFields: ptr.Ptr(true),
 			},
 			"status": {
-				XPreserveUnknownFields: ptr.Bool(true),
+				XPreserveUnknownFields: ptr.Ptr(true),
 			},
 		},
 	}
