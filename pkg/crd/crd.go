@@ -35,7 +35,7 @@ func applyCRD(ctx context.Context, apis apiextensionstypesv1.CustomResourceDefin
 		_, err := apis.Create(ctx, crd, metav1.CreateOptions{})
 		return err
 	}
-	data, err := json.Marshal(crd, jsonv1.OmitEmptyWithLegacyDefinition(true))
+	data, err := json.Marshal(crd, jsonv1.OmitEmptyWithLegacySemantics(true))
 	if err != nil {
 		return err
 	}
