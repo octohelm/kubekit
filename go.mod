@@ -1,6 +1,6 @@
 module github.com/octohelm/kubekit
 
-go 1.25.0
+go 1.26.5
 
 tool (
 	github.com/octohelm/kubekit/tool/internal/cmd/gen

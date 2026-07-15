@@ -3,6 +3,8 @@ package operator
 import (
 	"context"
 	"fmt"
+	"maps"
+	"strings"
 
 	"github.com/go-courier/logr"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -58,9 +60,15 @@ func (s *Operator) Serve(ctx context.Context) error {
 	ctrlOpt.Metrics.BindAddress = s.MetricsAddr
 
 	if s.WatchNamespace != "" {
-		ctrlOpt.Cache.DefaultNamespaces = map[string]cache.Config{
-			s.WatchNamespace: {},
-		}
+		ctrlOpt.Cache.DefaultNamespaces = maps.Collect(func(yield func(string, cache.Config) bool) {
+			for _, namespace := range strings.Split(s.WatchNamespace, ",") {
+				if namespace != "" {
+					if !yield(namespace, cache.Config{}) {
+						return
+					}
+				}
+			}
+		})
 	}
 
 	rawClient := kubeclient.KubeConfigFromClient(s.client)
